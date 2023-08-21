@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\training with Core web api\\WebApplication1\\WebApplication1.csproj": {}
+    "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj": {}
   },
   "projects": {
-    "C:\\training with Core web api\\WebApplication1\\WebApplication1.csproj": {
+    "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\training with Core web api\\WebApplication1\\WebApplication1.csproj",
+        "projectUniqueName": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
         "projectName": "WebApplication1",
-        "projectPath": "C:\\training with Core web api\\WebApplication1\\WebApplication1.csproj",
+        "projectPath": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
         "packagesPath": "C:\\Users\\Dinamow\\.nuget\\packages\\",
-        "outputPath": "C:\\training with Core web api\\WebApplication1\\obj\\",
+        "outputPath": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\vs code community\\New folder\\NuGetPackages"
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,6 +44,14 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.9, )"
@@ -89,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
