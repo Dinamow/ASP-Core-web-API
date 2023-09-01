@@ -95,5 +95,34 @@ namespace WebApplication1.Controllers
 
             return Ok("Successfully Created");
         }
+
+        [HttpPut("{OwnerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult Updatecountry(int OwnerId, [FromBody] OwnerDto updateOwner)
+        {
+            if (updateOwner == null)
+                return BadRequest(ModelState);
+
+            if (OwnerId != updateOwner.Id)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.OwnerExists(OwnerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var Ownermap = _mapper.Map<Owner>(updateOwner);
+
+            if (!_ownerRepository.UpdateOwner(Ownermap))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

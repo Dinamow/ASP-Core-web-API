@@ -9,6 +9,7 @@ namespace WebApplication1.interfaces
         ICollection<Pokemon> GetPokemonByCategory(int CategoryId);
         bool CategoryExists(int CategoryId);
         bool CreateCategory(Category category);
+        bool UpdateCategory(Category category);
         bool Save();
     }
 }

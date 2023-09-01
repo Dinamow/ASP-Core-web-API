@@ -9,6 +9,7 @@ namespace WebApplication1.interfaces
         ICollection<Review> GetReviewsOfAPokemon(int pokeId);
         bool ReviewExists(int reviewId);
         bool CreateReview(Review pokemon);
+        bool UpdateReview(Review pokemon);
         bool Save();
     }
 }

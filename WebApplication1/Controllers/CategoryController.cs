@@ -92,5 +92,34 @@ namespace WebApplication1.Controllers
 
             return Ok("Successfully Created");
         }
+
+        [HttpPut("{categoryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryDto updatecategory)
+        {
+            if (updatecategory == null)
+                return BadRequest(ModelState);
+
+            if (categoryId != updatecategory.Id)
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.CategoryExists(categoryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var categorymap = _mapper.Map<Category>(updatecategory);
+
+            if (!_categoryRepository.UpdateCategory(categorymap))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

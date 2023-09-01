@@ -91,5 +91,34 @@ namespace WebApplication1.Controllers
 
             return Ok("Successfully Created");
         }
+
+        [HttpPut("{ReviewerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult Updatecountry(int ReviewerId, [FromBody] ReviewerDto updateReviewer)
+        {
+            if (updateReviewer == null)
+                return BadRequest(ModelState);
+
+            if (ReviewerId != updateReviewer.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.ReviewrExists(ReviewerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var Reviewermap = _mapper.Map<Reviewer>(updateReviewer);
+
+            if (!_reviewerRepository.UpdateReviewer(Reviewermap))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

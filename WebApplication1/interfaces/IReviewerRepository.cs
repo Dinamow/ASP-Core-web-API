@@ -9,6 +9,7 @@ namespace WebApplication1.interfaces
         ICollection<Review> GetReviewsByReviewer(int reviewerId);
         bool ReviewrExists(int reviewerId);
         bool CreateReviewer(Reviewer reviewer);
+        bool UpdateReviewer(Reviewer reviewer);
         bool Save();
     }
 }

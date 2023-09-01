@@ -96,5 +96,34 @@ namespace WebApplication1.Controllers
 
             return Ok("Successfully Created");
         }
+
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult Updatecountry(int countryId, [FromBody] CountryDto updatecountry)
+        {
+            if (updatecountry == null)
+                return BadRequest(ModelState);
+
+            if (countryId != updatecountry.Id)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.CountryExists(countryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var countrymap = _mapper.Map<Country>(updatecountry);
+
+            if (!_countryRepository.UpdateCountry(countrymap))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

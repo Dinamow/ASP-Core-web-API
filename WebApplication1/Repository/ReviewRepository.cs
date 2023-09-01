@@ -44,5 +44,11 @@ namespace WebApplication1.Repository
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateReview(Review pokemon)
+        {
+            _context.Update(pokemon);
+            return Save();
+        }
     }
 }
