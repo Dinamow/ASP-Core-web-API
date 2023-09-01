@@ -126,5 +126,29 @@ namespace WebApplication1.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{ReviewId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteReview(int ReviewId)
+        {
+            if (!_reviewRepository.ReviewExists(ReviewId))
+                return NotFound();
+
+            var ReviewDelete = _reviewRepository.GetReview(ReviewId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewRepository.DeleteReview(ReviewDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong Deleting category");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

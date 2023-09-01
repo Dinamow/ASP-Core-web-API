@@ -19,6 +19,18 @@ namespace WebApplication1.Repository
             return Save();
         }
 
+        public bool DeleteReview(Review review)
+        {
+            _context.Remove(review);
+            return Save();
+        }
+
+        public bool DeleteReviews(List<Review> reviews)
+        {
+            _context.RemoveRange(reviews);
+            return Save();
+        }
+
         public Review GetReview(int reviewid)
         {
             return _context.Reviews.Where(r => r.Id == reviewid).FirstOrDefault();

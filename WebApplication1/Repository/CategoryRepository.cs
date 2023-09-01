@@ -24,6 +24,12 @@ namespace WebApplication1.Repository
             return Save();
         }
 
+        public bool DeleteCategory(Category CategoryId)
+        {
+            _context.Remove(CategoryId);
+            return Save();
+        }
+
         public ICollection<Category> GetCategories()
         {
             return _context.Categories.ToList();

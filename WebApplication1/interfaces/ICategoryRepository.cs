@@ -10,6 +10,7 @@ namespace WebApplication1.interfaces
         bool CategoryExists(int CategoryId);
         bool CreateCategory(Category category);
         bool UpdateCategory(Category category);
+        bool DeleteCategory(Category CategoryId);
         bool Save();
     }
 }

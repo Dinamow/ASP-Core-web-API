@@ -124,5 +124,29 @@ namespace WebApplication1.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{OwnerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteOwner(int OwnerId)
+        {
+            if (!_ownerRepository.OwnerExists(OwnerId))
+                return NotFound();
+
+            var OwnerDelete = _ownerRepository.GetOwner(OwnerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.DeleteOwner(OwnerDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong Deleting category");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }
