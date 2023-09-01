@@ -13,11 +13,16 @@ namespace WebApplication1.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewRepository _reviewRepository;
+        private readonly IReviewerRepository _reviewerRepository;
+        private readonly IPokemonRepository _pokemonRepository;
         private readonly IMapper _mapper;
 
-        public ReviewController(IReviewRepository reviewRepository, IMapper mapper)
+        public ReviewController(IReviewRepository reviewRepository,IReviewerRepository reviewerRepository,
+            IPokemonRepository pokemonRepository, IMapper mapper)
         {
             _reviewRepository = reviewRepository;
+            _reviewerRepository = reviewerRepository;
+            _pokemonRepository = pokemonRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -55,6 +60,42 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
 
             return Ok(review);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReview([FromQuery] int PokeId, [FromQuery] int reviwerId, [FromBody]ReviewDto ReviewCreate)
+        {
+            if (ReviewCreate == null)
+                return BadRequest();
+
+            var review = _reviewRepository.GetReviews()
+                .Where(c => c.Title.Trim().ToUpper() == ReviewCreate.Title.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (review != null)
+            {
+                ModelState.AddModelError("", "review already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewmap = _mapper.Map<Review>(ReviewCreate);
+
+            reviewmap.pokemon = _pokemonRepository.GetPokemon(PokeId);
+            reviewmap.Reviewer = _reviewerRepository.GetReviewer(reviwerId);
+
+            if (!_reviewRepository.CreateReview(reviewmap))
+            {
+                ModelState.AddModelError("", "Something went worng");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully Created");
         }
     }
 }

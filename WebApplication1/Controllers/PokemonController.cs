@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dto;
 using WebApplication1.interfaces;
 using WebApplication1.Models;
+using WebApplication1.Repository;
 
 namespace WebApplication1.Controllers
 {
@@ -57,6 +58,39 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
 
             return Ok(rating);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreatePokemon([FromQuery] int owneryId,[FromQuery] int catId, [FromBody] PokemonDto pokemonDto)
+        {
+            if (pokemonDto == null)
+                return BadRequest();
+
+            var pokemon = _pokemonRepository.GetPokemons()
+                .Where(c => c.Name.Trim().ToUpper() == pokemonDto.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (pokemon != null)
+            {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var PokeMap = _mapper.Map<Pokemon>(pokemonDto);
+
+            if (!_pokemonRepository.CreatePokemon(owneryId, catId, PokeMap))
+            {
+                ModelState.AddModelError("", "Something went worng");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully Created");
         }
     }
 }

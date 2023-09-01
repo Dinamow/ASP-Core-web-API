@@ -59,5 +59,37 @@ namespace WebApplication1.Controllers
 
             return Ok(review);
         }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReviewer([FromBody] ReviewerDto reviewerCreate)
+        {
+            if (reviewerCreate == null)
+                return BadRequest();
+
+            var reviewer = _reviewerRepository.GetReviewers()
+                .Where(c => c.FirstName.Trim().ToUpper() == reviewerCreate.FirstName.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (reviewer != null)
+            {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Reviewer>(reviewerCreate);
+
+            if (!_reviewerRepository.CreateReviewer(countryMap))
+            {
+                ModelState.AddModelError("", "Something went worng");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully Created");
+        }
     }
 }

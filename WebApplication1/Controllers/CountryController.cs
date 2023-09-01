@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dto;
 using WebApplication1.Models;
 using WebApplication1.interfaces;
+using WebApplication1.Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -61,6 +62,39 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
 
             return Ok(country);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCountry([FromBody] CountryDto countryCreate)
+        {
+            if (countryCreate == null)
+                return BadRequest();
+
+            var category = _countryRepository.GetCountries()
+                .Where(c => c.Name.Trim().ToUpper() == countryCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (category != null)
+            {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Country>(countryCreate);
+
+            if (!_countryRepository.CreateCountry(countryMap))
+            {
+                ModelState.AddModelError("", "Something went worng");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully Created");
         }
     }
 }
