@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tXnjXOVtR06Zww/6wAqrise5+K7tdgTC27rLWQ7/ebUWQf3umiCdMrP7ebBVGv0koCtJQ3z1ZyZR3Ri/MnCwEA==",
+  "dgSpecHash": "3ArLeFsAOZtoH8fK6fvW1mCitIzdCCABMIhCtSu0oqjdfh1QKwEFqxea/0R4edt3SoKHbvdCHMzjXbAvxGvzNA==",
   "success": true,
-  "projectFilePath": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
+  "projectFilePath": "F:\\github repos\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dinamow\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Dinamow\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

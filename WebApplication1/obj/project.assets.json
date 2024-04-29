@@ -11802,11 +11802,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "F:\\github repos\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
       "projectName": "WebApplication1",
-      "projectPath": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
+      "projectPath": "F:\\github repos\\ASP.NET-Core-web\\WebApplication1\\WebApplication1.csproj",
       "packagesPath": "C:\\Users\\Dinamow\\.nuget\\packages\\",
-      "outputPath": "C:\\training with Core web api\\ASP.NET-Core-web\\WebApplication1\\obj\\",
+      "outputPath": "F:\\github repos\\ASP.NET-Core-web\\WebApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "F:\\vs code community\\New folder\\NuGetPackages"
@@ -11833,6 +11833,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -11891,7 +11896,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
