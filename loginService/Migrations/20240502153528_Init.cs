@@ -16,8 +16,8 @@ namespace loginService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -31,66 +31,39 @@ namespace loginService.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.UniqueConstraint("AK_Users_Email", x => x.Email);
-                    table.UniqueConstraint("AK_Users_Username", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserConnections",
                 columns: table => new
                 {
-                    User1Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    User2Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SenderUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceiverUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsAccepted = table.Column<bool>(type: "bit", nullable: false),
+                    RequestedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserConnections", x => new { x.User1Id, x.User2Id });
+                    table.PrimaryKey("PK_UserConnections", x => new { x.SenderUserId, x.ReceiverUserId });
                     table.ForeignKey(
-                        name: "FK_UserConnections_Users_User1Id",
-                        column: x => x.User1Id,
+                        name: "FK_UserConnections_Users_ReceiverUserId",
+                        column: x => x.ReceiverUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserConnections_Users_User2Id",
-                        column: x => x.User2Id,
+                        name: "FK_UserConnections_Users_SenderUserId",
+                        column: x => x.SenderUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserUser",
-                columns: table => new
-                {
-                    RecivedConnectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserUser", x => new { x.RecivedConnectionId, x.UsersId });
-                    table.ForeignKey(
-                        name: "FK_UserUser_Users_RecivedConnectionId",
-                        column: x => x.RecivedConnectionId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserUser_Users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserConnections_User2Id",
+                name: "IX_UserConnections_ReceiverUserId",
                 table: "UserConnections",
-                column: "User2Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserUser_UsersId",
-                table: "UserUser",
-                column: "UsersId");
+                column: "ReceiverUserId");
         }
 
         /// <inheritdoc />
@@ -98,9 +71,6 @@ namespace loginService.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserConnections");
-
-            migrationBuilder.DropTable(
-                name: "UserUser");
 
             migrationBuilder.DropTable(
                 name: "Users");

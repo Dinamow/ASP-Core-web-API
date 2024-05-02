@@ -12,7 +12,7 @@ using loginService.Data;
 namespace loginService.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240502082254_Init")]
+    [Migration("20240502153528_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,19 +25,29 @@ namespace loginService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UserUser", b =>
+            modelBuilder.Entity("loginService.Models.Connection", b =>
                 {
-                    b.Property<Guid>("RecivedConnectionId")
+                    b.Property<Guid>("SenderUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsersId")
+                    b.Property<Guid>("ReceiverUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("RecivedConnectionId", "UsersId");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("UsersId");
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("bit");
 
-                    b.ToTable("UserUser");
+                    b.Property<DateTime>("RequestedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SenderUserId", "ReceiverUserId");
+
+                    b.HasIndex("ReceiverUserId");
+
+                    b.ToTable("UserConnections");
                 });
 
             modelBuilder.Entity("loginService.Models.User", b =>
@@ -51,7 +61,7 @@ namespace loginService.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -82,64 +92,37 @@ namespace loginService.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Email");
-
-                    b.HasAlternateKey("Username");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("loginService.Models.UserConnection", b =>
+            modelBuilder.Entity("loginService.Models.Connection", b =>
                 {
-                    b.Property<Guid>("User1Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("User2Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("User1Id", "User2Id");
-
-                    b.HasIndex("User2Id");
-
-                    b.ToTable("UserConnections");
-                });
-
-            modelBuilder.Entity("UserUser", b =>
-                {
-                    b.HasOne("loginService.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("RecivedConnectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("loginService.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("loginService.Models.UserConnection", b =>
-                {
-                    b.HasOne("loginService.Models.User", "User1")
-                        .WithMany()
-                        .HasForeignKey("User1Id")
+                    b.HasOne("loginService.Models.User", "ReceiverUser")
+                        .WithMany("ReceivedConnections")
+                        .HasForeignKey("ReceiverUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("loginService.Models.User", "User2")
-                        .WithMany()
-                        .HasForeignKey("User2Id")
+                    b.HasOne("loginService.Models.User", "SenderUser")
+                        .WithMany("SentConnections")
+                        .HasForeignKey("SenderUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("User1");
+                    b.Navigation("ReceiverUser");
 
-                    b.Navigation("User2");
+                    b.Navigation("SenderUser");
+                });
+
+            modelBuilder.Entity("loginService.Models.User", b =>
+                {
+                    b.Navigation("ReceivedConnections");
+
+                    b.Navigation("SentConnections");
                 });
 #pragma warning restore 612, 618
         }

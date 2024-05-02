@@ -25,10 +25,10 @@ namespace loginService.Models
         public string? SessionId { get; set; }
         public string? ResetToken { get; set; }
         public string? ResetTokenExpire { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public ICollection<User>? Users { get; set; }
-        public ICollection<User>? RecivedConnection { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<Connection>? SentConnections { get; set; }
+        public ICollection<Connection>? ReceivedConnections { get; set; }
         public void setPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
