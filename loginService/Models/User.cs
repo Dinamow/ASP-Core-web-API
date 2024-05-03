@@ -11,7 +11,7 @@ namespace loginService.Models
         [Required(ErrorMessage = "Username is required")]
         public required string Username { get; set; }
         [Required(ErrorMessage = "Password is required")]
-        private string? Password { get; set; }
+        public string? Password { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public required string Email { get; set; }
@@ -29,39 +29,28 @@ namespace loginService.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<Connection>? SentConnections { get; set; }
         public ICollection<Connection>? ReceivedConnections { get; set; }
-        public void setPassword(string password)
+
+        public void SetPassword(string value)
         {
-            if (string.IsNullOrEmpty(password))
-            {
+            if (string.IsNullOrEmpty(value))
                 throw new Exception("Password is required");
-            }
-            if (password.Length < 8)
-            {
+            if (value.Length < 8)
                 throw new Exception("Password must be at least 8 characters long");
-            }
-            if (!password.Any(char.IsDigit))
-            {
+            if (!value.Any(char.IsDigit))
                 throw new Exception("Password must contain at least one digit");
-            }
-            if (!password.Any(char.IsUpper))
-            {
+            if (!value.Any(char.IsUpper))
                 throw new Exception("Password must contain at least one uppercase letter");
-            }
-            if (!password.Any(char.IsLower))
-            {
+            if (!value.Any(char.IsLower))
                 throw new Exception("Password must contain at least one lowercase letter");
-            }
-            this.Password = HashPassword(password);
+            this.Password = HashPassword(value);
         }
-        private string HashPassword(string password)
+        private static string HashPassword(string password)
         {
             // Generate a salt
             string salt = BCrypt.Net.BCrypt.GenerateSalt();
 
             // Hash the password with the salt
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-
-            return hashedPassword;
+            return BCrypt.Net.BCrypt.HashPassword(password, salt);
         }
         public bool VerifyPassword(string password)
         {
