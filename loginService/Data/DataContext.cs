@@ -7,53 +7,28 @@ namespace loginService.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserConnection> UserConnections { get; set; }
+        public DbSet<Connection> UserConnections { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.Property(u => u.Id).ValueGeneratedOnAdd();
-                entity.HasKey(u => u.Id);
-                entity.HasAlternateKey(u => u.Email);
-                entity.HasAlternateKey(u => u.Username);
-            });
-            modelBuilder.Entity<UserConnection>(entity =>
-            {
-                entity.HasKey(uc => new { uc.User1Id, uc.User2Id });
+            base.OnModelCreating(modelBuilder);
 
-                entity.HasOne(uc => uc.User1)
-                      .WithMany()
-                      .HasForeignKey(uc => uc.User1Id)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Restrict);
+            // Define composite key for Connection entity
+            modelBuilder.Entity<Connection>()
+                .HasKey(c => new { c.SenderUserId, c.ReceiverUserId });
 
-                entity.HasOne(uc => uc.User2)
-                      .WithMany()
-                      .HasForeignKey(uc => uc.User2Id)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Restrict);
-            });
-        }
-        private static User CreateDefaultUser()
-        {
-            var user = new User()
-            {
-                Username = "DINAMOW",
-                Email = "meemoo102039@gmail.com",
-                Phone = "+201208677550",
-                Role = "Admin",
-                Gender = "male"
-            };
-            user.setPassword("Aadmin123");
-            return user;
-        }
+            // Configure one-to-many relationship between User and Connection
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.SentConnections)
+                .WithOne(c => c.SenderUser)
+                .HasForeignKey(c => c.SenderUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        // Seed the database
-        public void SeedData()
-        {
-            var user = CreateDefaultUser();
-            Users.Add(user);
-            SaveChanges();
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.ReceivedConnections)
+                .WithOne(c => c.ReceiverUser)
+                .HasForeignKey(c => c.ReceiverUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
